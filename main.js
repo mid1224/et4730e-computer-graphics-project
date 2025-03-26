@@ -17,9 +17,7 @@ controls.dampingFactor = 0.05;
 // Base floor
 const floorGeometry = new THREE.PlaneGeometry(50, 50);
 const floorMaterial = new THREE.MeshStandardMaterial({
-    color: 0x808080, // Grayish color
-    roughness: 0.8, // High roughness for a concrete-like surface
-    metalness: 0.2, // Low metalness
+    color: 0x808080, // Gray color
 });
 const floor = new THREE.Mesh(floorGeometry, floorMaterial);
 floor.rotation.x = -Math.PI / 2; // Rotate to make it horizontal
@@ -31,8 +29,6 @@ function createBuilding(width, height, depth, color, position, rotation = [0, 0,
     const geometry = new THREE.BoxGeometry(width, height, depth);
     const material = new THREE.MeshStandardMaterial({
         color: color,
-        roughness: 0.8,
-        metalness: 0.2,
     });
     const building = new THREE.Mesh(geometry, material);
     building.position.set(...position);
@@ -41,18 +37,16 @@ function createBuilding(width, height, depth, color, position, rotation = [0, 0,
     return building;
 }
 
-//--Building 1-- (Light Gray)
 const building1 = createBuilding(3, 6, 3, 0xB0B0B0, [-4, 3, -4]); // Light Gray
 scene.add(building1);
 
-//--Building 2-- (Steel Blue)
 const building2 = createBuilding(3, 4.5, 3, 0x4682B4, [-7.25, 2.25, -4]); // Steel Blue
 scene.add(building2);
 
 const building3Part1 = createBuilding(4, 6, 8, 0x77815C, [4, 3, -6]); // Sage Green
-const building3Part2 = createBuilding(4, 6, 3.5, 0x77815C, [4, 9, -8.25]); // Sage Green
-const building3Part3 = createBuilding(4, 6, 1.5, 0x77815C, [4, 9, -2.75]); // Sage Green
-const building3Part4 = createBuilding(4, 2, 3, 0x77815C, [4, 11, -5]); // Sage Green
+const building3Part2 = createBuilding(4, 6, 3.5, 0x77815C, [4, 9, -8.25]);
+const building3Part3 = createBuilding(4, 6, 1.5, 0x77815C, [4, 9, -2.75]);
+const building3Part4 = createBuilding(4, 2, 3, 0x77815C, [4, 11, -5]);
 scene.add(building3Part1);
 scene.add(building3Part2);
 scene.add(building3Part3);
@@ -85,18 +79,14 @@ scene.add(building11);
 const building12 = createBuilding(3, 3, 3.5, 0x808000, [-8, 1.5, 8]); // Olive Green
 scene.add(building12);
 
-//--Bus Stop-- (Sky Blue)
 const busStop = createBuilding(1.5, 1, 0.5, 0x87CEEB, [-3, 0.5, 2.5]); // Sky Blue
 scene.add(busStop);
-//--Bus Stop--
 
 // Function to create a road
 function createRoad(width, height, color, position, rotation = [0, 0, 0]) {
     const geometry = new THREE.PlaneGeometry(width, height);
     const material = new THREE.MeshStandardMaterial({
         color: color,
-        roughness: 0.9,
-        metalness: 0.1,
     });
     const road = new THREE.Mesh(geometry, material);
     road.rotation.set(...rotation);
@@ -118,13 +108,11 @@ const skyRail2 = createBuilding(20, .1, .65, 0xa3eeff, [0, 9, -5.75]); // Olive 
 scene.add(skyRail2);
 
 // Sky Train
-// Create a box to represent the train
-const train1Geometry = new THREE.BoxGeometry(2, 1, 1); // Dimensions of the train
-const train1Material = new THREE.MeshStandardMaterial({ color: 0xff0000 }); // Red color
-const train1 = new THREE.Mesh(train1Geometry, train1Material);
-train1.position.set(0, 8.4, -4.25); // Initial position slightly above the ground
-train1.castShadow = true;
+const train1 = createBuilding(2, 1, 1, 0xff0000, [0, 8.4, -4.25]); // Red
 scene.add(train1);
+
+const train2 = createBuilding(2, 1, 1, 0xff0000, [0, 8.4, -5.75]); // Red
+scene.add(train2);
 
 
 // Sunlight
@@ -144,14 +132,6 @@ scene.add(sunLight);
 // Add Ambient Light
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Soft ambient light
 scene.add(ambientLight);
-
-// Create a box to represent the train
-const train2Geometry = new THREE.BoxGeometry(2, 1, 1); // Dimensions of the train
-const train2Material = new THREE.MeshStandardMaterial({ color: 0xff0000 }); // Red color
-const train2 = new THREE.Mesh(train2Geometry, train2Material);
-train2.position.set(0, 8.4, -5.75); // Initial position slightly above the ground
-train2.castShadow = true;
-scene.add(train2);
 
 // Clock to track time
 const clock = new THREE.Clock();
