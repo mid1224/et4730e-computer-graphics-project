@@ -52,16 +52,16 @@ const tower_group = new THREE.Group();
 hieu_group.add(tower_group)
 tower_group.position.set(100, 0, 100);
 
-const tower_foundation = createBox(0x9e9e9e, [150, 50, 150], [0, 0, 0], [0, 0, 0]);
+const tower_foundation = createBox(0x9e9e9e, [150, 100, 150], [0, 0, 0], [0, 0, 0]);
 tower_group.add(tower_foundation);
 
-const tower_foundation_corner1 = createBox(0x9e9e9e, [50, 50, 50], [60, 0, 60], [0, 0, 0]);
+const tower_foundation_corner1 = createBox(0x9e9e9e, [50, 100, 50], [60, 0, 60], [0, 0, 0]);
 tower_group.add(tower_foundation_corner1);
-const tower_foundation_corner2 = createBox(0x9e9e9e, [50, 50, 50], [-60, 0, 60], [0, 0, 0]);
+const tower_foundation_corner2 = createBox(0x9e9e9e, [50, 100, 50], [-60, 0, 60], [0, 0, 0]);
 tower_group.add(tower_foundation_corner2);
-const tower_foundation_corner3 = createBox(0x9e9e9e, [50, 50, 50], [60, 0, -60], [0, 0, 0]);
+const tower_foundation_corner3 = createBox(0x9e9e9e, [50, 100, 50], [60, 0, -60], [0, 0, 0]);
 tower_group.add(tower_foundation_corner3);
-const tower_foundation_corner4 = createBox(0x9e9e9e, [50, 50, 50], [-60, 0, -60], [0, 0, 0]);
+const tower_foundation_corner4 = createBox(0x9e9e9e, [50, 100, 50], [-60, 0, -60], [0, 0, 0]);
 tower_group.add(tower_foundation_corner4);
 
 const tower_body = createBox(0x9e9e9e, [125, 600, 125], [0, 300, 0], [0, 0, 0]);
