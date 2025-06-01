@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 3000);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -13,107 +13,93 @@ document.body.appendChild(renderer.domElement);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true; // Smooth camera movement
 controls.dampingFactor = 0.05;
+controls.target.set(-350, 0, -350);
 
-// Base floor
-const floorGeometry = new THREE.PlaneGeometry(50, 50);
-const floorMaterial = new THREE.MeshStandardMaterial({
-    color: 0x808080, // Gray color
+// Modeling
+// Create ground
+const groundGeometry = new THREE.BoxGeometry(1200, 1200, 10);
+const groundMaterial = new THREE.MeshStandardMaterial({
+    color: 0x44546a,
+    side: THREE.DoubleSide
 });
-const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-floor.rotation.x = -Math.PI / 2; // Rotate to make it horizontal
-floor.receiveShadow = true; // Floor receives shadows
-scene.add(floor);
+const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+ground.rotation.x = -Math.PI / 2;
+scene.add(ground);
 
-// Function to create a building
-function createBuilding(width, height, depth, color, position, rotation = [0, 0, 0]) {
-    const geometry = new THREE.BoxGeometry(width, height, depth);
-    const material = new THREE.MeshStandardMaterial({
-        color: color,
+// create a road
+const roadGeometry = new THREE.BoxGeometry(1200, 200, 20);
+const roadMaterial = new THREE.MeshStandardMaterial({
+    color: 0x333333, // Dark gray
+    side: THREE.DoubleSide
     });
-    const building = new THREE.Mesh(geometry, material);
-    building.position.set(...position);
-    building.rotation.set(...rotation);
-    building.castShadow = true;
-    return building;
-}
 
-const building1 = createBuilding(3, 6, 3, 0xB0B0B0, [-4, 3, -4]); // Light Gray
-scene.add(building1);
 
-const building2 = createBuilding(3, 4.5, 3, 0x4682B4, [-7.25, 2.25, -4]); // Steel Blue
-scene.add(building2);
-
-const building3Part1 = createBuilding(4, 6, 8, 0x77815C, [4, 3, -6]); // Sage Green
-const building3Part2 = createBuilding(4, 6, 3.5, 0x77815C, [4, 9, -8.25]);
-const building3Part3 = createBuilding(4, 6, 1.5, 0x77815C, [4, 9, -2.75]);
-const building3Part4 = createBuilding(4, 2, 3, 0x77815C, [4, 11, -5]);
-scene.add(building3Part1);
-scene.add(building3Part2);
-scene.add(building3Part3);
-scene.add(building3Part4);
-
-const building4 = createBuilding(3, 6, 8, 0xC2B280, [7.5, 3, -6]); // Sand Beige
-scene.add(building4);
-
-const building5 = createBuilding(4, 10, 3, 0x9370DB, [-5, 5, -8]); // Muted Purple
-scene.add(building5);
-
-const building6 = createBuilding(2, 4, 4, 0xFFC0CB, [3, 2, 4]); // Rose Pink
-scene.add(building6);
-
-const building7 = createBuilding(2, 5, 4, 0xFFD700, [4.11, 2.5, 6.75], [0, Math.PI / 4, 0]); // Golden Yellow
-scene.add(building7);
-
-const building8 = createBuilding(2, 6, 4, 0x008080, [6.85, 3, 7.9], [0, Math.PI / 2, 0]); // Teal
-scene.add(building8);
-
-const building9 = createBuilding(3, 8, 3, 0xE6E6FA, [7.5, 4, 3.9]); // Lavender
-scene.add(building9);
-
-const building10 = createBuilding(4, 1.5, 6, 0xCC5500, [-4, 0.75, 7]); // Burnt Orange
-scene.add(building10);
-
-const building11 = createBuilding(3, 4, 4, 0x93E9BE, [-8, 2, 4]); // Seafoam Green
-scene.add(building11);
-
-const building12 = createBuilding(3, 3, 3.5, 0x808000, [-8, 1.5, 8]); // Olive Green
-scene.add(building12);
-
-const busStop = createBuilding(1.5, 1, 0.5, 0x87CEEB, [-3, 0.5, 2.5]); // Sky Blue
-scene.add(busStop);
-
-// Function to create a road
-function createRoad(width, height, color, position, rotation = [0, 0, 0]) {
-    const geometry = new THREE.PlaneGeometry(width, height);
-    const material = new THREE.MeshStandardMaterial({
-        color: color,
-    });
-    const road = new THREE.Mesh(geometry, material);
-    road.rotation.set(...rotation);
-    road.position.set(...position);
-    road.receiveShadow = true;
-    return road;
-}
-
-const road1 = createRoad(20, 2, 0x333333, [0, 0.01, 0], [-Math.PI / 2, 0, 0]);
+const road1 = new THREE.Mesh(roadGeometry, roadMaterial);
+road1.rotation.x = -Math.PI / 2;
+road1.position.y = 0.01; // Slightly above the ground to avoid z-fighting
 scene.add(road1);
 
-const road2 = createRoad(20, 2, 0x333333, [0, 0.01, 0], [-Math.PI / 2, 0, -Math.PI / 2]);
+const road2 = new THREE.Mesh(roadGeometry, roadMaterial);
+road2.rotation.set(-Math.PI / 2, 0, Math.PI / 2)
+road2.position.y = 0.01; // Slightly above the ground to avoid z-fighting
 scene.add(road2);
 
-// Sky Rail
-const skyRail1 = createBuilding(20, .1, .65, 0xa3eeff, [0, 9, -4.25]); // Olive Green
-scene.add(skyRail1);
-const skyRail2 = createBuilding(20, .1, .65, 0xa3eeff, [0, 9, -5.75]); // Olive Green
-scene.add(skyRail2);
+//add a building in the center
+const hieu_group = new THREE.Group();
+scene.add(hieu_group);
 
-// Sky Train
-const train1 = createBuilding(2, 1, 1, 0xff0000, [0, 8.4, -4.25]); // Red
-scene.add(train1);
+const tower_group = new THREE.Group();
+hieu_group.add(tower_group)
+tower_group.position.set(100, 0, 100);
 
-const train2 = createBuilding(2, 1, 1, 0xff0000, [0, 8.4, -5.75]); // Red
-scene.add(train2);
+const tower_foundation = createBox(0x9e9e9e, [150, 50, 150], [0, 0, 0], [0, 0, 0]);
+tower_group.add(tower_foundation);
 
+const tower_foundation_corner1 = createBox(0x9e9e9e, [50, 50, 50], [60, 0, 60], [0, 0, 0]);
+tower_group.add(tower_foundation_corner1);
+const tower_foundation_corner2 = createBox(0x9e9e9e, [50, 50, 50], [-60, 0, 60], [0, 0, 0]);
+tower_group.add(tower_foundation_corner2);
+const tower_foundation_corner3 = createBox(0x9e9e9e, [50, 50, 50], [60, 0, -60], [0, 0, 0]);
+tower_group.add(tower_foundation_corner3);
+const tower_foundation_corner4 = createBox(0x9e9e9e, [50, 50, 50], [-60, 0, -60], [0, 0, 0]);
+tower_group.add(tower_foundation_corner4);
+
+const tower_body = createBox(0x9e9e9e, [125, 600, 125], [0, 300, 0], [0, 0, 0]);
+tower_group.add(tower_body);
+const tower_body_edge1 = createBox(0x9e9e9e, [25, 600, 25], [60, 300, 60], [0, 0, 0]);
+tower_group.add(tower_body_edge1);
+const tower_body_edge2 = createBox(0x9e9e9e, [25, 600, 25], [60, 300, -60], [0, 0, 0]);
+tower_group.add(tower_body_edge2);
+const tower_body_edge3 = createBox(0x9e9e9e, [25, 600, 25], [-60, 300, 60], [0, 0, 0]);
+tower_group.add(tower_body_edge3);
+const tower_body_edge4 = createBox(0x9e9e9e, [25, 600, 25], [-60, 300, -60], [0, 0, 0]);
+tower_group.add(tower_body_edge4);
+
+const tower_clock_body = createBox(0x9e9e9e, [160, 160, 160], [0, 600, 0], [0, 0, 0]);
+tower_group.add(tower_clock_body);
+const tower_clock_body_bottom = createBox(0x9e9e9e, [170, 10, 170], [0, 520, 0], [0, 0, 0]);
+tower_group.add(tower_clock_body_bottom);
+const tower_clock_body_top1 = createBox(0x9e9e9e, [160, 10, 160], [0, 680, 0], [0, 0, 0]);
+tower_group.add(tower_clock_body_top1);
+const tower_clock_body_top2 = createBox(0x9e9e9e, [140, 50, 140], [0, 700, 0], [0, 0, 0]);
+tower_group.add(tower_clock_body_top2);
+
+const tower_roof1 = createCone(0x8b0000, 100, 100, 4, [0, 770, 0], [0, 45, 0]); // Dark red roof
+tower_group.add(tower_roof1);
+const tower_roof1_bottom = createBox(0x9e9e9e, [150, 10, 150], [0, 720, 0], [0, 0, 0]);
+tower_group.add(tower_roof1_bottom);
+const tower_roof1_top1 = createBox(0x9e9e9e, [60, 60, 60], [0, 810, 0], [0, 0, 0]);
+tower_group.add(tower_roof1_top1);
+const tower_roof1_top2 = createBox(0x9e9e9e, [65, 5, 65], [0, 780, 0], [0, 0, 0]);
+tower_group.add(tower_roof1_top2);
+
+const tower_roof2 = createCone(0x8b0000, 40, 120, 4, [0, 900, 0], [0, 45, 0]); // Dark red roof
+tower_group.add(tower_roof2);
+const tower_roof2_bottom = createBox(0x9e9e9e, [65, 5, 65], [0, 840, 0], [0, 0, 0]);
+tower_group.add(tower_roof2_bottom);
+
+
+hieu_group.position.set(-350, 0, -350);
 
 // Sunlight
 const sunLight = new THREE.DirectionalLight(0xffffff, 1.5); // Increased intensity
@@ -133,25 +119,51 @@ scene.add(sunLight);
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Soft ambient light
 scene.add(ambientLight);
 
-// Clock to track time
-const clock = new THREE.Clock();
-
 // Camera position
-camera.position.set(5, 5, 10);
-camera.lookAt(0, 0, 0);
+camera.position.set(-550, 1200, 0);
 
 function animate() {
     controls.update(); // Update OrbitControls
-
-    // Animate the train moving back and forth
-    const time = clock.getElapsedTime(); // Get elapsed time
-    const speed1 = .25; // Speed of the train1
-    const speed2 = .5; // Speed of the train2
-    const distance = 9; // Total distance the train moves
-    train1.position.x = Math.sin(time * speed1) * distance; // Move the train back and forth
-    train2.position.x = Math.sin(time * speed2) * distance; // Move the train back and forth
 
     renderer.render(scene, camera); // Render the scene
 }
 
 renderer.setAnimationLoop(animate);
+
+function createBox(color, size, position, rotation) {
+    // Create geometry and material
+    const geometry = new THREE.BoxGeometry(size[0], size[1], size[2]);
+    const material = new THREE.MeshStandardMaterial({ color: color });
+    const box = new THREE.Mesh(geometry, material);
+
+    // Set position
+    box.position.set(position[0], position[1], position[2]);
+
+    // Convert rotation from degrees to radians and set rotation
+    box.rotation.set(
+        THREE.MathUtils.degToRad(rotation[0]),
+        THREE.MathUtils.degToRad(rotation[1]),
+        THREE.MathUtils.degToRad(rotation[2])
+    );
+
+    return box;
+}
+
+function createCone(color, baseRadius, height, segments, position, rotation) {
+    // Create geometry and material
+    const geometry = new THREE.ConeGeometry(baseRadius, height, segments);
+    const material = new THREE.MeshStandardMaterial({ color: color });
+    const cone = new THREE.Mesh(geometry, material);
+
+    // Set position
+    cone.position.set(position[0], position[1], position[2]);
+
+    // Convert rotation from degrees to radians and set rotation
+    cone.rotation.set(
+        THREE.MathUtils.degToRad(rotation[0]),
+        THREE.MathUtils.degToRad(rotation[1]),
+        THREE.MathUtils.degToRad(rotation[2])
+    );
+
+    return cone;
+}
